@@ -11,74 +11,34 @@
 int main(void)
 {
 	FILE* file;
-	int data;
-	int count = 0;
-	unsigned char list[256];
+	int data = 0;
+	int count = 1;
+	unsigned char list;
 	
-
-	if (fopen_s(&file, FILENAME, "rb") == 0)
+	fopen_s(&file, FILENAME, "rb");
+	
+	while (fread_s(&list, count, 1, 1, file) != 0)
 	{
-		data = fread_s(list, 256, sizeof(unsigned char), sizeof(list) / sizeof(list[0]), file);
-		
-		for (int i = 0; i < data; ++i)
+		if ((count - 1) == 0)
 		{
-			if (i == 0)
-			{
-				printf("%08x ", count);
-			}
-			else if (i % 16 == 0)
-			{
-				printf("\n");
-				count += 16;
-				printf("%08x ", count);
-			}
-			else if (i % 8 == 0)
-			{
-				printf(" ");
-			}
-
+			printf("%08x ", data);
+		}
+		else if ((count - 1) % 16 == 0)
+		{
+			printf("\n");
+			data += 16;
+			printf("%08x ", data);
+		}
+		else if ((count - 1) % 8 == 0)
+		{
 			printf(" ");
-			printf("%02x", list[i]);
 		}
-		printf("読み込み終了");
-		
-		fclose(file);
-	}
-	/*
-	file = fopen("hello.txt", "rb");
-	if (!file)
-	{
-		printf("ファイルが開けません.\n");
-		return 0;
-	}
-
-
-
-
-	while (1)
-	{
-		printf("%08x ", count);
+		printf(" ");
+		printf("%02x", list);
 		count++;
-		for (int i = 0; i < 16; i++)
-		{
-			if ((data = getc(file)) == EOF)
-			{
-				printf("\n");
-				fclose(file);
-				return 0;
-			}
-			printf("%02x ", data);
-
-			if (i == (8 - 1))
-			{
-				printf(" ");
-			}
-		}
-		printf("\n");
 	}
 
-
-	fclose(file);*/
+	fclose(file);
 
 	return 0;
 }
